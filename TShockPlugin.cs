@@ -46,9 +46,9 @@ namespace EvilMimicSpawner
             );
             var playerId = reader.ReadByte();
             BitsByte control = reader.ReadByte();
-            var pulley = reader.ReadByte();
-            var misc = reader.ReadByte();
-            var sleepingInfo = reader.ReadByte();
+            _ = reader.ReadByte();
+            _ = reader.ReadByte();
+            _ = reader.ReadByte();
             var selectedSlot = reader.ReadByte();
 
             bool useItem = control[5];
