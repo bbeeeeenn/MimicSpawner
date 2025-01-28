@@ -60,7 +60,11 @@ namespace EvilMimicSpawner
 
             if (
                 useItem
-                && selectedItem.netID == Terraria.ID.ItemID.NightKey
+                && new List<int>()
+                {
+                    Terraria.ID.ItemID.NightKey,
+                    Terraria.ID.ItemID.LightKey,
+                }.Contains(selectedItem.netID)
                 && (
                     !LastSummon.ContainsKey(player.Name)
                     || (DateTime.Now - LastSummon[player.Name]).Seconds >= 2
@@ -80,21 +84,23 @@ namespace EvilMimicSpawner
                     selectedItem.prefix,
                     selectedItem.netID
                 );
-                SpawnMimic(player);
+                SpawnMimic(player, selectedItem.netID == Terraria.ID.ItemID.NightKey);
             }
         }
 
-        private static void SpawnMimic(TSPlayer player)
+        private static void SpawnMimic(TSPlayer player, bool nightKey)
         {
             Vector2 playerPosition = player.TPlayer.position;
             int offset = random.Next(-200, 200);
             Vector2 position = new(playerPosition.X + offset, playerPosition.Y);
-            List<int> ids = new()
+            List<int> evilMimics = new()
             {
                 Terraria.ID.NPCID.BigMimicCorruption,
                 Terraria.ID.NPCID.BigMimicCrimson,
             };
-            int type = ids[random.Next(ids.Count)];
+            int type = nightKey
+                ? evilMimics[random.Next(evilMimics.Count)]
+                : Terraria.ID.NPCID.BigMimicHallow;
             int index = NPC.NewNPC(null, (int)position.X, (int)position.Y, type);
             if (index != 200)
             {
