@@ -46,9 +46,9 @@ namespace EvilMimicSpawner
             );
             var playerId = reader.ReadByte();
             BitsByte control = reader.ReadByte();
-            _ = reader.ReadByte();
-            _ = reader.ReadByte();
-            _ = reader.ReadByte();
+            var pulley = reader.ReadByte();
+            var misc = reader.ReadByte();
+            var sleepingInfo = reader.ReadByte();
             var selectedSlot = reader.ReadByte();
 
             bool useItem = control[5];
@@ -60,11 +60,7 @@ namespace EvilMimicSpawner
 
             if (
                 useItem
-                && new List<int>()
-                {
-                    Terraria.ID.ItemID.NightKey,
-                    Terraria.ID.ItemID.LightKey,
-                }.Contains(selectedItem.netID)
+                && selectedItem.netID == Terraria.ID.ItemID.NightKey
                 && (
                     !LastSummon.ContainsKey(player.Name)
                     || (DateTime.Now - LastSummon[player.Name]).Seconds >= 2
@@ -84,23 +80,21 @@ namespace EvilMimicSpawner
                     selectedItem.prefix,
                     selectedItem.netID
                 );
-                SpawnMimic(player, selectedItem.netID == Terraria.ID.ItemID.NightKey);
+                SpawnMimic(player);
             }
         }
 
-        private static void SpawnMimic(TSPlayer player, bool nightKey)
+        private static void SpawnMimic(TSPlayer player)
         {
             Vector2 playerPosition = player.TPlayer.position;
             int offset = random.Next(-200, 200);
             Vector2 position = new(playerPosition.X + offset, playerPosition.Y);
-            List<int> evilMimics = new()
+            List<int> ids = new()
             {
                 Terraria.ID.NPCID.BigMimicCorruption,
                 Terraria.ID.NPCID.BigMimicCrimson,
             };
-            int type = nightKey
-                ? evilMimics[random.Next(evilMimics.Count)]
-                : Terraria.ID.NPCID.BigMimicHallow;
+            int type = ids[random.Next(ids.Count)];
             int index = NPC.NewNPC(null, (int)position.X, (int)position.Y, type);
             if (index != 200)
             {
