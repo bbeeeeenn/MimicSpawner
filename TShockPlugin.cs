@@ -14,7 +14,7 @@ namespace EvilMimicSpawner
         public override Version Version => base.Version;
         private static readonly Random random = new();
 
-        readonly Dictionary<string, DateTime> LastSummon = new();
+        private readonly Dictionary<string, DateTime> LastSummon = new();
 
         public EvilMimicSpawner(Main game)
             : base(game) { }
